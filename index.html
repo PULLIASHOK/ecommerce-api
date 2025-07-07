@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>E-commerce Auth</title>
+  <style>
+    body { font-family: Arial; max-width: 400px; margin: 50px auto; }
+    form { border: 1px solid #ccc; padding: 20px; margin-bottom: 30px; }
+    input { width: 100%; margin: 10px 0; padding: 10px; }
+    button { width: 100%; padding: 10px; background: #28a745; color: white; border: none; }
+    h2 { text-align: center; }
+  </style>
+</head>
+<body>
+  <h2>Register</h2>
+  <form id="registerForm">
+    <input type="text" placeholder="Name" name="name" required>
+    <input type="email" placeholder="Email" name="email" required>
+    <input type="password" placeholder="Password" name="password" required>
+    <button type="submit">Register</button>
+  </form>
+
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="email" placeholder="Email" name="email" required>
+    <input type="password" placeholder="Password" name="password" required>
+    <button type="submit">Login</button>
+  </form>
+
+  <script>
+    const registerForm = document.getElementById('registerForm');
+    const loginForm = document.getElementById('loginForm');
+
+    registerForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(registerForm);
+      const data = Object.fromEntries(formData.entries());
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      alert(res.ok ? 'Registered!' : 'Failed to register');
+    };
+
+    loginForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(loginForm);
+      const data = Object.fromEntries(formData.entries());
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      if (res.ok) {
+        alert('Logged in! Token: ' + result.token);
+      } else {
+        alert('Login failed');
+      }
+    };
+  </script>
+</body>
+</html>
